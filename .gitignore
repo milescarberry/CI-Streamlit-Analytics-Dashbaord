@@ -1,0 +1,4 @@
+.streamlit/secrets.toml
+.env
+streamlit_venv/
+pbi_datasets/pbix
