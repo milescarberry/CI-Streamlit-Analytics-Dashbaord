@@ -453,15 +453,6 @@ sales_df = sales_df.reset_index(drop = True)
 
 
 
-if 'sales_df' not in st.session_state:
-
-
-	st.session_state.sales_df = sales_df
-
-
-
-
-
 with st.sidebar:
 
 
@@ -498,14 +489,13 @@ with st.sidebar:
 	if 'item_filt' not in st.session_state:
 
 
-		unique_items = sales_df[
 
-		sales_df.Category.isin(st.session_state.cat_sel)
+		unique_items = sales_df.ItemID.unique().tolist()
 
-		].ItemID.unique().tolist()
 
 
 		unique_items.sort()
+
 
 
 		st.session_state.item_filt = unique_items
@@ -750,21 +740,11 @@ with st.sidebar:
 	unique_cat = sales_df.Category.unique().tolist()
 
 
-	unique_cat = sales_df[
-
-		sales_df.ItemID.isin(
-
-			st.session_state.item_filt
-
-		)
-
-	].Category.unique().tolist()
-
-
 	unique_cat.sort()
 
 
 	cat_list.extend(unique_cat)
+
 
 
 	def change_cat_sel():
@@ -773,19 +753,7 @@ with st.sidebar:
 		st.session_state.cat_sel = st.session_state.new_cat_sel
 
 
-		unique_cat = sales_df[
-
-
-			sales_df.ItemID.isin(
-
-
-				st.session_state.item_filt
-
-
-			)
-
-
-		].Category.unique().tolist()
+		unique_cat = sales_df.Category.unique().tolist()
 
 
 
@@ -865,15 +833,7 @@ with st.sidebar:
 	items_list = ['All']
 
 
-	unique_items = sales_df[
-
-		sales_df.Category.isin(
-
-			st.session_state.cat_sel
-
-		)
-
-	].ItemID.unique().tolist()
+	unique_items = sales_df.ItemID.unique().tolist()
 
 
 	unique_items.sort()
@@ -888,15 +848,7 @@ with st.sidebar:
 		st.session_state.item_filt = st.session_state.new_item_filt
 
 
-		unique_items = sales_df[
-
-		sales_df.Category.isin(
-
-			st.session_state.cat_sel
-
-			)
-
-		].ItemID.unique().tolist()
+		unique_items = sales_df.ItemID.unique().tolist()
 
 
 		unique_items.sort()
@@ -917,6 +869,7 @@ with st.sidebar:
 		else:
 
 			pass
+
 
 
 		st.toast(
