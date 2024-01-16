@@ -138,6 +138,8 @@ with st.sidebar:
 # Do your work here
 
 
+# Creating sales_df session_state variable 
+
 
 districts_df = data[0]
 
@@ -451,6 +453,15 @@ sales_df = sales_df.reset_index(drop = True)
 
 
 
+if 'sales_df' not in st.session_state:
+
+
+	st.session_state.sales_df = sales_df
+
+
+
+
+
 with st.sidebar:
 
 
@@ -469,10 +480,29 @@ with st.sidebar:
 
 
 
+
+	if 'cat_sel' not in st.session_state:
+
+
+		unique_cat = sales_df.Category.unique().tolist()
+
+
+		unique_cat.sort()
+
+
+		st.session_state.cat_sel = unique_cat
+
+
+
+
 	if 'item_filt' not in st.session_state:
 
 
-		unique_items = sales_df.ItemID.unique().tolist()
+		unique_items = sales_df[
+
+		sales_df.Category.isin(st.session_state.cat_sel)
+
+		].ItemID.unique().tolist()
 
 
 		unique_items.sort()
@@ -505,20 +535,6 @@ with st.sidebar:
 
 
 		st.session_state.terr_sel = unique_terr
-
-
-
-
-	if 'cat_sel' not in st.session_state:
-
-
-		unique_cat = sales_df.Category.unique().tolist()
-
-
-		unique_cat.sort()
-
-
-		st.session_state.cat_sel = unique_cat
 
 
 
@@ -724,13 +740,140 @@ with st.sidebar:
 	st.write("\n\n")
 
 
+
+	# Category Filter
+
+
+	cat_list = ['All']
+
+
+	unique_cat = sales_df.Category.unique().tolist()
+
+
+	unique_cat = sales_df[
+
+		sales_df.ItemID.isin(
+
+			st.session_state.item_filt
+
+		)
+
+	].Category.unique().tolist()
+
+
+	unique_cat.sort()
+
+
+	cat_list.extend(unique_cat)
+
+
+	def change_cat_sel():
+
+
+		st.session_state.cat_sel = st.session_state.new_cat_sel
+
+
+		unique_cat = sales_df[
+
+
+			sales_df.ItemID.isin(
+
+
+				st.session_state.item_filt
+
+
+			)
+
+
+		].Category.unique().tolist()
+
+
+
+		if 'All' in st.session_state.cat_sel:
+
+
+			st.session_state.cat_sel = unique_cat
+
+
+
+		elif len(st.session_state.cat_sel) == 0:
+
+
+			st.session_state.cat_sel = unique_cat
+
+
+
+		else:
+
+			pass
+
+
+
+		st.toast(
+
+			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
+
+			icon = 'ℹ️'
+
+			)
+
+
+
+	cat_sel = st.multiselect(
+
+
+		"Select Category", 
+
+
+		cat_list, 
+
+
+		['All'],
+
+
+		on_change = change_cat_sel,
+
+
+		key = 'new_cat_sel'
+
+
+		)
+
+
+	cats = []
+
+
+	if 'All' in cat_sel:
+
+
+		cats = unique_cat
+
+
+	else:
+
+
+		cats = cat_sel
+
+
+	st.write("\n\n")
+
+
+
 	# Item Filter
 
 
 	items_list = ['All']
 
 
-	unique_items = sales_df.ItemID.unique().tolist()
+	unique_items = sales_df[
+
+		sales_df.Category.isin(
+
+			st.session_state.cat_sel
+
+		)
+
+	].ItemID.unique().tolist()
 
 
 	unique_items.sort()
@@ -745,7 +888,22 @@ with st.sidebar:
 		st.session_state.item_filt = st.session_state.new_item_filt
 
 
+		unique_items = sales_df[
+
+		sales_df.Category.isin(
+
+			st.session_state.cat_sel
+
+			)
+
+		].ItemID.unique().tolist()
+
+
+		unique_items.sort()
+
+
 		if 'All' in st.session_state.item_filt:
+
 
 			st.session_state.item_filt = unique_items
 
@@ -883,6 +1041,7 @@ with st.sidebar:
 	st.write("\n\n")
 
 
+
 	# Adding Territory Filter
 
 
@@ -951,97 +1110,6 @@ with st.sidebar:
 
 		terrs = terr_sel
 
-
-
-	st.write("\n\n")
-
-
-	# Category Filter
-
-
-	cat_list = ['All']
-
-
-	unique_cat = sales_df.Category.unique().tolist()
-
-
-	unique_cat.sort()
-
-	cat_list.extend(unique_cat)
-
-
-	def change_cat_sel():
-
-
-		st.session_state.cat_sel = st.session_state.new_cat_sel
-
-
-		if 'All' in st.session_state.cat_sel:
-
-
-			st.session_state.cat_sel = unique_cat
-
-
-
-		elif len(st.session_state.cat_sel) == 0:
-
-
-			st.session_state.cat_sel = unique_cat
-
-
-
-		else:
-
-			pass
-
-
-
-		st.toast(
-
-			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
-
-			icon = 'ℹ️'
-
-			)
-
-
-
-
-
-	cat_sel = st.multiselect(
-
-
-		"Select Category", 
-
-
-		cat_list, 
-
-
-		['All'],
-
-
-		on_change = change_cat_sel,
-
-
-		key = 'new_cat_sel'
-
-
-		)
-
-
-	cats = []
-
-
-	if 'All' in cat_sel:
-
-
-		cats = unique_cat
-
-
-	else:
-
-
-		cats = cat_sel
 
 
 	st.write("\n\n")
@@ -2726,288 +2794,289 @@ with tab2:
 
 
 
+with tab3:
 
 
-try:
+	try:
 
-	with tab3:
+		
 
 
-		# Gross Margin Scenario Table
+			# Gross Margin Scenario Table
 
 
-		st.write("\n\n")
+			st.write("\n\n")
 
 
-		margin_df = sales_df[
+			margin_df = sales_df[
 
 
-			(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+				(sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
-			(sales_df.DM.isin(st.session_state.dms_sel)) &
+				(sales_df.DM.isin(st.session_state.dms_sel)) &
 
 
-			(sales_df.Territory.isin(st.session_state.terr_sel)) &
+				(sales_df.Territory.isin(st.session_state.terr_sel)) &
 
 
-			(sales_df.Category.isin(st.session_state.cat_sel)) &
+				(sales_df.Category.isin(st.session_state.cat_sel)) &
 
 
-			(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
+				(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
 
 
-			(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
+				(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
 
 
-		]
+			]
 
 
 
-		scen_1 = margin_df[margin_df.ScenarioID == 1]
+			scen_1 = margin_df[margin_df.ScenarioID == 1]
 
 
-		scen_2 = margin_df[margin_df.ScenarioID == 2]
+			scen_2 = margin_df[margin_df.ScenarioID == 2]
 
 
-		scen_1_grp = scen_1.groupby(
+			scen_1_grp = scen_1.groupby(
 
-			['MonthID'], 
+				['MonthID'], 
 
-			as_index = False, 
+				as_index = False, 
 
-			dropna = False
+				dropna = False
 
-			).agg(
+				).agg(
 
-			{"Sum_GrossMarginAmount": pd.Series.sum}
+				{"Sum_GrossMarginAmount": pd.Series.sum}
 
-			).sort_values(
+				).sort_values(
 
-			by = 'MonthID', 
+				by = 'MonthID', 
 
-			ascending = True
+				ascending = True
 
-		)
+			)
 
 
-		scen_1_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
+			scen_1_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
 
 
 
-		scen_2_grp = scen_2.groupby(
+			scen_2_grp = scen_2.groupby(
 
-			['MonthID'], 
+				['MonthID'], 
 
-			as_index = False, 
+				as_index = False, 
 
-			dropna = False
+				dropna = False
 
-			).agg(
+				).agg(
 
-			{"Sum_GrossMarginAmount": pd.Series.sum}
+				{"Sum_GrossMarginAmount": pd.Series.sum}
 
-			).sort_values(
+				).sort_values(
 
-			by = 'MonthID', 
+				by = 'MonthID', 
 
-			ascending = True
-
-		)
-
-
-
-		scen_2_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
-
-
-
-		scenario_tab = pd.merge(
-
-			scen_1_grp, 
-
-			scen_2_grp, 
-
-			how = 'inner', 
-
-			on = 'Month'
-
+				ascending = True
 
 			)
 
 
 
-		scenario_tab['Total Gross Margin Amount'] = scenario_tab.apply(
+			scen_2_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
 
-			lambda x: x[1] + x[2], 
 
-			axis = 1
+
+			scenario_tab = pd.merge(
+
+				scen_1_grp, 
+
+				scen_2_grp, 
+
+				how = 'inner', 
+
+				on = 'Month'
+
+
+				)
+
+
+
+			scenario_tab['Total Gross Margin Amount'] = scenario_tab.apply(
+
+				lambda x: x[1] + x[2], 
+
+				axis = 1
+
+				)
+
+
+
+			scenario_tab['Gross Percentage'] = scenario_tab.apply(
+
+				lambda x: round((x[1] / x[3]) * 100, 2), 
+
+				axis = 1
+
+				)
+
+
+
+
+			# Display Scenario Table
+
+
+			# st.dataframe(data = scenario_tab, use_container_width = True, hide_index = True)
+
+
+
+			# Totals Scenario Table
+
+
+			scen_vals =[
+
+				
+				"Total",
+
+				scenario_tab.apply(lambda x: x[1], axis = 1).sum(), 
+
+				scenario_tab.apply(lambda x: x[2], axis = 1).sum(), 
+
+				scenario_tab.apply(lambda x: x[3], axis = 1).sum(), 
+
+				scenario_tab.apply(lambda x: x[4], axis = 1).mean()
+
+			]
+
+
+			scen_names = scenario_tab.columns.values.tolist()
+
+
+			scen_dict = {k: v for k, v in zip(scen_names, scen_vals)}
+
+
+			scenario_totals = pd.DataFrame([scen_dict])
+
+
+
+			scenario_tab['Gross Percentage'] = scenario_tab.apply(
+
+				lambda x: (str(round((x[1] / x[3]) * 100, 2)) + "%").strip(), 
+
+				axis = 1
+
+				)
+
+
+
+			scenario_tab['Total Gross Margin Amount'] = scenario_tab['Total Gross Margin Amount'].apply(
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+			scenario_tab['Sum of Gross Margin Amount for Scenario 2'] = scenario_tab['Sum of Gross Margin Amount for Scenario 2'].apply(
+
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+
+			scenario_tab['Sum of Gross Margin Amount for Scenario 1'] = scenario_tab['Sum of Gross Margin Amount for Scenario 1'].apply(
+
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+			scenario_tab['Month'] = scenario_tab['Month'].apply(
+
+				lambda x: dt.datetime.strftime(x, "%B %Y")
+
+
+				)
+
+
+
+
+
+			scenario_totals['Gross Percentage'] = scenario_totals['Gross Percentage'].apply(
+
+				lambda x: (str(round(x, 2)) + "%").strip()
+
+				)
+
+
+
+			scenario_totals['Total Gross Margin Amount'] = scenario_totals['Total Gross Margin Amount'].apply(
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+			scenario_totals['Sum of Gross Margin Amount for Scenario 2'] = scenario_totals['Sum of Gross Margin Amount for Scenario 2'].apply(
+
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+
+			scenario_totals['Sum of Gross Margin Amount for Scenario 1'] = scenario_totals['Sum of Gross Margin Amount for Scenario 1'].apply(
+
+
+				lambda x: f"${int(x):,d}"
+
+
+				)
+
+
+
+			final_scenario_table = pd.concat(
+
+				[scenario_tab, scenario_totals], 
+
+				axis = 0, 
+
+				ignore_index = True
+
+				)
+
+
+			# Display Final Scenario Table
+
+
+			st.write("<div style='text-align: center;'><span style='font-weight: bold;font-size: 30px;'>Scenario Table</span></div><br>", unsafe_allow_html = True)
+
+
+			st.dataframe(data = final_scenario_table, hide_index = True, use_container_width = True)
+
+
+
+	except:
+
+
+		st.write(
+
+				"<div style='text-align: center;'><span style='font-weight: bold;font-size: 18px;'>Not Enough Data To Display Table</span></div><br>", 
+
+				unsafe_allow_html = True
 
 			)
-
-
-
-		scenario_tab['Gross Percentage'] = scenario_tab.apply(
-
-			lambda x: round((x[1] / x[3]) * 100, 2), 
-
-			axis = 1
-
-			)
-
-
-
-
-		# Display Scenario Table
-
-
-		# st.dataframe(data = scenario_tab, use_container_width = True, hide_index = True)
-
-
-
-		# Totals Scenario Table
-
-
-		scen_vals =[
-
-			
-			"Total",
-
-			scenario_tab.apply(lambda x: x[1], axis = 1).sum(), 
-
-			scenario_tab.apply(lambda x: x[2], axis = 1).sum(), 
-
-			scenario_tab.apply(lambda x: x[3], axis = 1).sum(), 
-
-			scenario_tab.apply(lambda x: x[4], axis = 1).mean()
-
-		]
-
-
-		scen_names = scenario_tab.columns.values.tolist()
-
-
-		scen_dict = {k: v for k, v in zip(scen_names, scen_vals)}
-
-
-		scenario_totals = pd.DataFrame([scen_dict])
-
-
-
-		scenario_tab['Gross Percentage'] = scenario_tab.apply(
-
-			lambda x: (str(round((x[1] / x[3]) * 100, 2)) + "%").strip(), 
-
-			axis = 1
-
-			)
-
-
-
-		scenario_tab['Total Gross Margin Amount'] = scenario_tab['Total Gross Margin Amount'].apply(
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-		scenario_tab['Sum of Gross Margin Amount for Scenario 2'] = scenario_tab['Sum of Gross Margin Amount for Scenario 2'].apply(
-
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-
-		scenario_tab['Sum of Gross Margin Amount for Scenario 1'] = scenario_tab['Sum of Gross Margin Amount for Scenario 1'].apply(
-
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-		scenario_tab['Month'] = scenario_tab['Month'].apply(
-
-			lambda x: dt.datetime.strftime(x, "%B %Y")
-
-
-			)
-
-
-
-
-
-		scenario_totals['Gross Percentage'] = scenario_totals['Gross Percentage'].apply(
-
-			lambda x: (str(round(x, 2)) + "%").strip()
-
-			)
-
-
-
-		scenario_totals['Total Gross Margin Amount'] = scenario_totals['Total Gross Margin Amount'].apply(
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-		scenario_totals['Sum of Gross Margin Amount for Scenario 2'] = scenario_totals['Sum of Gross Margin Amount for Scenario 2'].apply(
-
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-
-		scenario_totals['Sum of Gross Margin Amount for Scenario 1'] = scenario_totals['Sum of Gross Margin Amount for Scenario 1'].apply(
-
-
-			lambda x: f"${int(x):,d}"
-
-
-			)
-
-
-
-		final_scenario_table = pd.concat(
-
-			[scenario_tab, scenario_totals], 
-
-			axis = 0, 
-
-			ignore_index = True
-
-			)
-
-
-		# Display Final Scenario Table
-
-
-		st.write("<div style='text-align: center;'><span style='font-weight: bold;font-size: 30px;'>Scenario Table</span></div><br>", unsafe_allow_html = True)
-
-
-		st.dataframe(data = final_scenario_table, hide_index = True, use_container_width = True)
-
-
-
-except:
-
-
-	st.write(
-
-			"<div style='text-align: center;'><span style='font-weight: bold;font-size: 18px;'>Not Enough Data To Display Table</span></div><br>", 
-
-			unsafe_allow_html = True
-
-		)
 
 
 
