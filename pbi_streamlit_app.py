@@ -470,35 +470,57 @@ with st.sidebar:
 		st.session_state.time_ax = "Month"
 
 
+	if 'unique_cat' not in st.session_state:
+
+		_ = sales_df.Category.unique().tolist()
+
+		_.sort()
+
+
+		st.session_state.unique_cat = _
+
+
+
+	# if 'unique_items' not in st.session_state:
+
+
+	# 	_ = sales_df.ItemID.unique().tolist()
+
+
+	# 	_.sort()
+
+
+	# 	st.session_state.unique_items = _
+
 
 
 	if 'cat_sel' not in st.session_state:
 
 
-		unique_cat = sales_df.Category.unique().tolist()
+		# unique_cat = sales_df.Category.unique().tolist()
 
 
-		unique_cat.sort()
+		# unique_cat.sort()
 
 
-		st.session_state.cat_sel = unique_cat
-
-
-
-
-	if 'item_filt' not in st.session_state:
+		st.session_state.cat_sel = st.session_state.unique_cat
 
 
 
-		unique_items = sales_df.ItemID.unique().tolist()
+
+	# if 'item_filt' not in st.session_state:
 
 
 
-		unique_items.sort()
+	# 	# unique_items = sales_df.ItemID.unique().tolist()
 
 
 
-		st.session_state.item_filt = unique_items
+	# 	# unique_items.sort()
+
+
+
+	# 	st.session_state.item_filt = st.session_state.unique_items
 
 
 
@@ -737,13 +759,13 @@ with st.sidebar:
 	cat_list = ['All']
 
 
-	unique_cat = sales_df.Category.unique().tolist()
+	# unique_cat = sales_df.Category.unique().tolist()
 
 
-	unique_cat.sort()
+	# unique_cat.sort()
 
 
-	cat_list.extend(unique_cat)
+	cat_list.extend(st.session_state.unique_cat)
 
 
 
@@ -753,25 +775,25 @@ with st.sidebar:
 		st.session_state.cat_sel = st.session_state.new_cat_sel
 
 
-		unique_cat = sales_df.Category.unique().tolist()
+		# unique_cat = sales_df.Category.unique().tolist()
 
 
 
 		if 'All' in st.session_state.cat_sel:
 
 
-			st.session_state.cat_sel = unique_cat
+			st.session_state.cat_sel = st.session_state.unique_cat
 
 
 
 		elif len(st.session_state.cat_sel) == 0:
 
 
-			st.session_state.cat_sel = unique_cat
-
+			st.session_state.cat_sel = st.session_state.unique_cat
 
 
 		else:
+
 
 			pass
 
@@ -808,19 +830,19 @@ with st.sidebar:
 		)
 
 
-	cats = []
+	# cats = []
 
 
-	if 'All' in cat_sel:
+	# if 'All' in cat_sel:
 
 
-		cats = unique_cat
+	# 	cats = unique_cat
 
 
-	else:
+	# else:
 
 
-		cats = cat_sel
+	# 	cats = cat_sel
 
 
 	st.write("\n\n")
@@ -830,93 +852,94 @@ with st.sidebar:
 	# Item Filter
 
 
-	items_list = ['All']
+	# items_list = ['All']
 
 
-	unique_items = sales_df.ItemID.unique().tolist()
+	# # unique_items = sales_df.ItemID.unique().tolist()
 
 
-	unique_items.sort()
+	# # unique_items.sort()
 
 
-	items_list.extend(unique_items)
-
-
-	def change_item_filt():
-
-
-		st.session_state.item_filt = st.session_state.new_item_filt
-
-
-		unique_items = sales_df.ItemID.unique().tolist()
-
-
-		unique_items.sort()
-
-
-		if 'All' in st.session_state.item_filt:
-
-
-			st.session_state.item_filt = unique_items
-
-
-		elif len(st.session_state.item_filt) == 0:
-
-
-			st.session_state.item_filt = unique_items
-
-
-		else:
-
-			pass
+	# items_list.extend(st.session_state.unique_items)
 
 
 
-		st.toast(
-
-			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
-
-			icon = 'ℹ️'
-
-			)
+	# def change_item_filt():
 
 
-	item_filt = st.multiselect(
+	# 	st.session_state.item_filt = st.session_state.new_item_filt
 
 
-		"Select Items", 
+	# 	# unique_items = sales_df.ItemID.unique().tolist()
 
 
-		items_list, 
+	# 	# unique_items.sort()
 
 
-		['All'],        # Default Selection
+	# 	if 'All' in st.session_state.item_filt:
 
 
-		on_change = change_item_filt,
+	# 		st.session_state.item_filt = st.session_state.unique_items
 
 
-		key = 'new_item_filt'
+	# 	elif len(st.session_state.item_filt) == 0:
 
 
-	)
+	# 		st.session_state.item_filt = st.session_state.unique_items
 
 
-	items = []
+	# 	else:
+
+	# 		pass
 
 
-	if 'All' in item_filt:
+
+	# 	st.toast(
+
+	# 		f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
+
+	# 		icon = 'ℹ️'
+
+	# 		)
 
 
-		items = unique_items
+	# item_filt = st.multiselect(
 
 
-	else:
-
-		items = item_filt
+	# 	"Select Items", 
 
 
-	st.write("\n\n")
+	# 	items_list, 
+
+
+	# 	['All'],        # Default Selection
+
+
+	# 	on_change = change_item_filt,
+
+
+	# 	key = 'new_item_filt'
+
+
+	# )
+
+
+	# # items = []
+
+
+	# # if 'All' in item_filt:
+
+
+	# # 	items = unique_items
+
+
+	# # else:
+
+	# # 	items = item_filt
+
+
+	# st.write("\n\n")
 
 
 
@@ -1220,7 +1243,7 @@ with st.sidebar:
 	graph_df = sales_df[
 
 
-		(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+		# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 		(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -1291,7 +1314,7 @@ with kpi_col1:
 		metric_df = sales_df[
 
 
-			(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+			# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 			(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -1375,7 +1398,7 @@ with kpi_col3:
 		home_sales_df = sales_df[
 
 
-		(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+		# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 		(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -1442,7 +1465,7 @@ with kpi_col2:
 		gauge_df = sales_df[
 
 
-			(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+			# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 			(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -1525,7 +1548,17 @@ with kpi_col2:
 # Creating Tabs
 
 
-tab1, tab2, tab3 = st.tabs(['Tab 1', 'Tab 2', 'Tab 3'])
+tab1, tab2, tab3 = st.tabs([
+
+	'Time Series Charts', 
+
+	'Territory Donut Chart', 
+
+	'Tabular Analysis By Scenario'
+
+	]
+
+)
 
 
 
@@ -2566,7 +2599,7 @@ with tab2:
 	donut_df = sales_df[
 
 
-	(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+	# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 	(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -2647,10 +2680,11 @@ with tab2:
 
 			    	"<b>%{label}</b>", 
 
+
 			    	f"<b>{metric_sel}: </b>" + "<b>$%{value:.2s}</b>", 
 
 
-			    	"<b>%{percent:.2f}</b><extra></extra>"
+			    	"<b>%{percent:.1%}</b><extra></extra>"
 
 			    	""
 
@@ -2694,6 +2728,7 @@ with tab2:
 		    	[
 
 			    	"<b>%{label}</b>", 
+
 
 			    	f"<b>{metric_sel}: </b>" + "<b>%{value:.2s} units</b>", 
 
@@ -2764,7 +2799,7 @@ with tab3:
 			margin_df = sales_df[
 
 
-				(sales_df.ItemID.isin(st.session_state.item_filt)) & 
+				# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
 				(sales_df.DM.isin(st.session_state.dms_sel)) &
@@ -3013,7 +3048,7 @@ with tab3:
 			# Display Final Scenario Table
 
 
-			st.write("<div style='text-align: center;'><span style='font-weight: bold;font-size: 30px;'>Scenario Table</span></div><br>", unsafe_allow_html = True)
+			st.write("<div style='text-align: center;'><span style='font-weight: bold;font-size: 28px;'>Tabular Analysis By Scenario</span></div><br>", unsafe_allow_html = True)
 
 
 			st.dataframe(data = final_scenario_table, hide_index = True, use_container_width = True)
@@ -3032,6 +3067,281 @@ with tab3:
 			)
 
 
+
+
+
+st.write("\n\n")
+
+
+
+# Scenario Table Practice
+
+
+scen_df = sales_df[
+
+
+		# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
+
+
+		(sales_df.DM.isin(st.session_state.dms_sel)) &
+
+
+		(sales_df.Territory.isin(st.session_state.terr_sel)) &
+
+
+		(sales_df.Category.isin(st.session_state.cat_sel)) &
+
+
+		(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
+
+
+		(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
+
+
+	]
+
+
+scen1 = scen_df[sales_df.ScenarioID == 1].groupby(
+
+
+	['MonthID'], 
+
+	as_index = False, 
+
+	dropna = False
+
+
+	).agg(
+
+	{"Sum_GrossMarginAmount": pd.Series.sum}
+
+	).sort_values(
+
+	by = 'MonthID', 
+
+	ascending = True
+
+
+)
+
+
+scen2 = scen_df[
+
+
+sales_df.ScenarioID == 2
+
+
+].groupby(
+
+	['MonthID'], 
+
+
+	as_index = False, 
+
+
+	dropna = False
+
+
+	).agg(
+
+
+	{"Sum_GrossMarginAmount": pd.Series.sum}
+
+
+	).sort_values(
+
+
+	by = ['MonthID'], 
+
+
+	ascending = [True]
+
+)
+
+
+scen1.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
+
+
+scen2.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
+
+
+
+scen_merged = pd.merge(scen1, scen2, on = 'Month', how = 'inner')
+
+
+scen_merged['Total Gross Margin Amount'] = scen_merged.apply(
+
+	lambda x: x[1] + x[2], 
+
+
+	axis = 1
+
+
+	)
+
+
+
+scen_merged['Gross Percentage'] = scen_merged.apply(lambda x: x[1] / x[3], axis = 1)
+
+
+
+scen_total = pd.DataFrame(
+
+
+	[
+
+		{
+
+			"Month": 'Total', 
+
+
+			"Sum of Gross Margin Amount for Scenario 1": scen_merged['Sum of Gross Margin Amount for Scenario 1'].sum(),
+
+
+			"Sum of Gross Margin Amount for Scenario 2": scen_merged['Sum of Gross Margin Amount for Scenario 2'].sum(),
+
+
+			"Total Gross Margin Amount": scen_merged['Total Gross Margin Amount'].sum(),
+
+
+			"Gross Percentage": scen_merged['Gross Percentage'].mean()
+
+		}
+
+
+	]
+
+
+
+)
+
+
+
+scen_merged['Month'] = scen_merged['Month'].apply(
+
+	lambda x: 
+
+	dt.datetime.strftime(x, "%B - %Y")
+
+	)
+
+
+scen_merged['Sum of Gross Margin Amount for Scenario 1'] = scen_merged[
+
+'Sum of Gross Margin Amount for Scenario 1'
+
+].apply(
+
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+scen_merged['Sum of Gross Margin Amount for Scenario 2'] = scen_merged[
+
+'Sum of Gross Margin Amount for Scenario 2'
+
+].apply(
+
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+
+
+scen_merged['Total Gross Margin Amount'] = scen_merged[
+
+'Total Gross Margin Amount'
+
+].apply(
+
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+scen_merged['Gross Percentage'] = scen_merged['Gross Percentage'].apply(
+
+	lambda x: f"{x:.1%}"
+
+	)
+
+
+
+
+scen_total['Sum of Gross Margin Amount for Scenario 1'] = scen_total[
+
+'Sum of Gross Margin Amount for Scenario 1'
+
+].apply(
+	
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+scen_total['Sum of Gross Margin Amount for Scenario 2'] = scen_total[
+
+'Sum of Gross Margin Amount for Scenario 2'
+
+].apply(
+
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+
+
+scen_total['Total Gross Margin Amount'] = scen_total[
+
+'Total Gross Margin Amount'
+
+].apply(
+
+
+	lambda x: f"${int(x):,d}"
+
+
+	)
+
+
+
+
+scen_total['Gross Percentage'] = scen_total['Gross Percentage'].apply(
+
+	lambda x: f"{x:.1%}"
+
+	)
+
+
+
+scen_final = pd.concat(
+
+	[scen_merged, scen_total], 
+
+	axis = 0, 
+
+	ignore_index = True
+
+)
+
+
+# Displaying scen_final
+
+
+st.dataframe(scen_final, use_container_width = True, hide_index = True)
 
 
 
