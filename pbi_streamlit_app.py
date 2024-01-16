@@ -761,6 +761,15 @@ with st.sidebar:
 			pass
 
 
+		st.toast(
+
+			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
+
+			icon = 'ℹ️'
+
+			)
+
+
 	item_filt = st.multiselect(
 
 
@@ -841,7 +850,7 @@ with st.sidebar:
 
 	dms_sel = st.multiselect(
 
-		"Select DM", 
+		"Select Deputy Manager",
 
 		dms_list, 
 
@@ -987,6 +996,17 @@ with st.sidebar:
 
 
 
+		st.toast(
+
+			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
+
+			icon = 'ℹ️'
+
+			)
+
+
+
+
 
 	cat_sel = st.multiselect(
 
@@ -1091,6 +1111,16 @@ with st.sidebar:
 
 
 		st.session_state.metric_option = st.session_state.new_metric_option
+
+
+		st.toast(
+
+			f"Only Territory & Deputy Manager Filters Are Applied on the 'Total Rent By {st.session_state.time_ax}' Chart.", 
+
+			icon = 'ℹ️'
+
+			)
+
 
 
 
@@ -1471,223 +1501,207 @@ with kpi_col2:
 
 
 
+# Creating Tabs
 
 
-# Our Sales and Rent Time Series Charts
-
-
-# st.write("\n")
-
-
-# Creating Two Columns
-
-
-ts_col1, ts_col2 = st.columns(2)
+tab1, tab2, tab3 = st.tabs(['Tab 1', 'Tab 2', 'Tab 3'])
 
 
 
-with ts_col1:
+with tab1:
 
 
-	with st.container(height = 430, border=True):
+	# Our Sales and Rent Time Series Charts
+
+
+	# st.write("\n")
+
+
+	# Creating Two Columns
+
+
+	ts_col1, ts_col2 = st.columns(2)
 
 
 
-		# Get Data Aggregated By Selected Time Series
+	with ts_col1:
+
+
+		with st.container(height = 430, border=True):
 
 
 
-		graph_df['MonthName'] = graph_df.MonthID.apply(
-
-			lambda x: dt.datetime.strftime(x, "%B")
-
-		)
+			# Get Data Aggregated By Selected Time Series
 
 
-		graph_df['Year'] = graph_df.MonthID.apply(
 
+			graph_df['MonthName'] = graph_df.MonthID.apply(
 
-			lambda x: int(dt.datetime.strftime(x, "%Y"))
-
-		)
-
-
-		# graph_df['Quarter'] = graph_df['MonthID'].dt.quarter
-
-
-		graph_df['Quarter'] = graph_df['MonthID'].apply(
-
-			lambda x: first_date_of_quarter(x.to_pydatetime())
+				lambda x: dt.datetime.strftime(x, "%B")
 
 			)
 
 
-		# graph_df['Quarter'] = graph_df.MonthName.apply(lambda x: quarter_dict[x])
+			graph_df['Year'] = graph_df.MonthID.apply(
 
 
-
-		graph_df = graph_df.reindex(columns = [
-		  "MonthID",
-		  "MonthName",
-		  "Quarter",
-		  "Year",
-		  "ItemID",
-		  "Segment",
-		  "Category",
-		  "Buyer",
-		  "FamilyName",
-		  "Sum_GrossMarginAmount",
-		  "Sum_Regular_Sales_Dollars",
-		  "Sum_Markdown_Sales_Dollars",
-		  "TotalRegularSales",
-		  "TotalMarkdownSales",
-		  "TotalSales",
-		  "ScenarioID",
-		  "ReportingPeriodID",
-		  "Sum_Regular_Sales_Units",
-		  "Sum_Markdown_Sales_Units",
-		  "TotalUnits",
-		  "LocationID",
-		  "City Name",
-		  "Territory",
-		  "PostalCode",
-		  "OpenDate",
-		  "OpenDateYear",
-		  'OpenDateYearMonth',
-		  "OpenDateMonth",
-		  'OpenDateQuarter',
-		  "SellingAreaSize",
-		  "DistrictName",
-		  "Name",
-		  "City",
-		  "DistrictID",
-		  "Store Type",
-		  "Total Rent",
-		  "DM",
-		  "BusinessUnitID"
-		])
-
-
-		# graph_df['Quarter'] = graph_df.apply(lambda x: str(x[3]) + '-' + x[2], axis = 1)
-
-
-		# graph_df['Quarter'] = graph_df['Quarter'].apply(lambda x: x[2::1])
-
-
-		graph_df = graph_df.groupby(
-
-			[f'{time_val}'], 
-
-			as_index = False, 
-
-			dropna = False
-
-			).agg(
-
-			{
-
-			f"{metrics_dict[metric_sel]}": pd.Series.sum
-
-			}
+				lambda x: int(dt.datetime.strftime(x, "%Y"))
 
 			)
 
 
+			# graph_df['Quarter'] = graph_df['MonthID'].dt.quarter
 
 
-		graph_df = graph_df.sort_values(by = f'{time_val}', ascending = True)
+			graph_df['Quarter'] = graph_df['MonthID'].apply(
 
+				lambda x: first_date_of_quarter(x.to_pydatetime())
 
+				)
 
 
+			# graph_df['Quarter'] = graph_df.MonthName.apply(lambda x: quarter_dict[x])
 
 
-		# Time Series Plotly Express Chart
 
+			graph_df = graph_df.reindex(columns = [
+			  "MonthID",
+			  "MonthName",
+			  "Quarter",
+			  "Year",
+			  "ItemID",
+			  "Segment",
+			  "Category",
+			  "Buyer",
+			  "FamilyName",
+			  "Sum_GrossMarginAmount",
+			  "Sum_Regular_Sales_Dollars",
+			  "Sum_Markdown_Sales_Dollars",
+			  "TotalRegularSales",
+			  "TotalMarkdownSales",
+			  "TotalSales",
+			  "ScenarioID",
+			  "ReportingPeriodID",
+			  "Sum_Regular_Sales_Units",
+			  "Sum_Markdown_Sales_Units",
+			  "TotalUnits",
+			  "LocationID",
+			  "City Name",
+			  "Territory",
+			  "PostalCode",
+			  "OpenDate",
+			  "OpenDateYear",
+			  'OpenDateYearMonth',
+			  "OpenDateMonth",
+			  'OpenDateQuarter',
+			  "SellingAreaSize",
+			  "DistrictName",
+			  "Name",
+			  "City",
+			  "DistrictID",
+			  "Store Type",
+			  "Total Rent",
+			  "DM",
+			  "BusinessUnitID"
+			])
 
 
+			# graph_df['Quarter'] = graph_df.apply(lambda x: str(x[3]) + '-' + x[2], axis = 1)
 
-		fig = exp.line(
 
+			# graph_df['Quarter'] = graph_df['Quarter'].apply(lambda x: x[2::1])
 
-			graph_df, 
 
+			graph_df = graph_df.groupby(
 
-			x = f'{time_val}',
+				[f'{time_val}'], 
 
+				as_index = False, 
 
-			y = f'{metrics_dict[metric_sel]}',
+				dropna = False
 
+				).agg(
 
+				{
 
-			text = f'{metrics_dict[metric_sel]}'
+				f"{metrics_dict[metric_sel]}": pd.Series.sum
 
+				}
 
+				)
 
-			)
 
 
-		fig.update_xaxes(title = f'')
 
+			graph_df = graph_df.sort_values(by = f'{time_val}', ascending = True)
 
-		if 'unit' not in metric_sel.lower():
 
 
-			fig.update_yaxes(
 
-				title = f'{metric_sel}' + " (in Dollars)"
 
-			)
 
+			# Time Series Plotly Express Chart
 
-		else:
 
 
-			fig.update_yaxes(
 
-				title = f'{metric_sel}'
+			fig = exp.line(
 
-			)
 
+				graph_df, 
 
 
+				x = f'{time_val}',
 
-		hovertemp = ""
 
+				y = f'{metrics_dict[metric_sel]}',
 
-		texttemp = ""
 
 
+				text = f'{metrics_dict[metric_sel]}'
 
-		if 'unit' in metric_sel.lower():
 
 
+				)
 
-			hovertemp = "<br><br>".join(
 
-			[
+			fig.update_xaxes(title = f'')
 
 
-			"<b>%{x}</b>", 
+			if 'unit' not in metric_sel.lower():
 
 
-			f"<b>{metric_sel}: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
+				fig.update_yaxes(
 
-			]
+					title = f'{metric_sel}' + " (in Dollars)"
 
+				)
 
-			)
 
+			else:
 
-			texttemp = "<b>%{y:.2s}<b>"
 
+				fig.update_yaxes(
 
+					title = f'{metric_sel}'
 
-		else:
+				)
 
 
 
-			hovertemp = "<br><br>".join(
+
+			hovertemp = ""
+
+
+			texttemp = ""
+
+
+
+			if 'unit' in metric_sel.lower():
+
+
+
+				hovertemp = "<br><br>".join(
 
 				[
 
@@ -1695,7 +1709,7 @@ with ts_col1:
 				"<b>%{x}</b>", 
 
 
-				f"<b>{metric_sel}: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
+				f"<b>{metric_sel}: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
 
 				]
 
@@ -1703,315 +1717,15 @@ with ts_col1:
 				)
 
 
-			texttemp = "<b>$%{y:.2s}</b>"
+				texttemp = "<b>%{y:.2s}<b>"
 
 
 
-		fig.update_traces(
+			else:
 
-			hovertemplate = hovertemp, 
 
-			texttemplate = texttemp, 
 
-			textposition = 'top center'
-
-		)
-
-
-		fig.update_layout(
-
-			title = dict(
-
-				text = f"{metric_sel} by {st.session_state.time_ax}<br><br>", 
-
-				x = 0.5, 
-
-				xanchor = 'center', 
-
-				yanchor =  'top'
-
-			)
-
-		)
-
-
-		fig.update_layout(height = 400)
-
-
-
-		# if st.session_state.time_ax == 'Quarter':
-
-		# 	fig.update_xaxes(tickangle = -45)
-
-
-
-		# Display Plotly Chart 
-
-		st.plotly_chart(fig, use_container_width = True)
-
-
-
-
-
-# st.write(graph_df[metrics_dict[metric_sel]].sum())    # Total Number
-
-
-
-# st.write("\n\n")
-
-
-# st.table(
-
-# 	sales_df.groupby(
-
-# 		['Territory']
-
-# 		, 
-
-# 		as_index = False, 
-
-# 		dropna = False
-
-# 		).agg(
-
-# 	{
-
-# 	"TotalSales": pd.Series.sum
-
-# 	}
-
-# 	).sort_values(
-
-# 	by = ['TotalSales'], 
-
-# 	ascending = [False]
-
-
-
-# 	).iloc[0, ::1]
-
-# )
-
-
-
-# # st.write(
-
-
-# # 	sales_df[
-
-
-# # 	(sales_df.Territory == 'PA') & 
-
-
-# # 	(sales_df.DM.isin(['Carlos Grilo', 'Chris Gray']))
-
-
-# # 	]['TotalSales'].sum()
-
-
-
-# # )
-
-
-
-# # Question 5 
-
-
-# st.write("Total Sales: ")
-
-# st.write(graph_df[metrics_dict[metric_sel]].sum())
-
-
-# st.write("Best Performing Territory: ")
-
-
-# st.write(sales_df.groupby(
-
-# 	['Territory'], 
-
-# 	as_index = False, 
-
-# 	dropna = False
-
-# 	).agg(
-
-# 	{"TotalSales": pd.Series.sum}
-
-# 	).sort_values(
-
-# 	by = 'TotalSales', 
-
-# 	ascending = False
-
-# ).head())
-
-
-
-with ts_col2:
-
-
-	with st.container(height = 430, border=True):
-
-
-		# Store Rental Calculation
-
-
-
-		# st.write(sales_df.iloc[::1, 22:26:1])
-
-
-		# st.write(sales_df.sample(4))
-
-
-		# st.write("Rental Calc")
-
-
-
-		rental_df = sales_df[
-
-
-			# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
-
-
-			(sales_df.DM.isin(st.session_state.dms_sel)) &
-
-
-			(sales_df.Territory.isin(st.session_state.terr_sel)) &
-
-
-			# (sales_df.Category.isin(st.session_state.cat_sel)) &
-
-
-			(pd.to_datetime(sales_df.OpenDateYearMonth) >= st.session_state.rental_months_sel[0]) & 
-
-
-			(pd.to_datetime(sales_df.OpenDateYearMonth) <= st.session_state.rental_months_sel[1])
-
-
-		]
-
-
-
-		rental_grp_df = rental_df.groupby(
-
-			[f'{rental_time_val}'], 
-
-			as_index = False, 
-
-			dropna = False
-
-			).agg(
-
-			{
-
-			f"Total Rent": pd.Series.sum
-
-			}
-
-			)
-
-
-
-
-		rental_grp_df = rental_grp_df.sort_values(
-
-			by = f'{rental_time_val}', 
-
-			ascending = True
-
-		)
-
-
-
-
-		# Time Series Plotly Express Chart
-
-
-		if st.session_state.time_ax == 'Quarter' or st.session_state.time_ax == 'Month':
-
-
-
-			fig = exp.line(
-
-
-				rental_grp_df, 
-
-
-				x = f'{rental_time_val}',
-
-
-				y = f'Total Rent',
-
-
-
-				# text = f'Total Rent'
-
-
-
-				)
-
-
-			fig.update_xaxes(title = f'')
-
-
-			# if 'unit' not in metric_sel.lower():
-
-
-			fig.update_yaxes(
-
-				title = f'Total Rent' + " (in Dollars)"
-
-			)
-
-
-			# else:
-
-
-			# 	fig.update_yaxes(
-
-			# 		title = f'Total Rent'
-
-			# 	)
-
-
-
-
-			# hovertemp = ""
-
-
-			# texttemp = ""
-
-
-
-			# if 'unit' in metric_sel.lower():
-
-
-
-			# 	hovertemp = "<br><br>".join(
-
-			# 	[
-
-
-			# 	"<b>%{x}</b>", 
-
-
-			# 	f"<b>Total Rent: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
-
-			# 	]
-
-
-			# 	)
-
-
-			# 	texttemp = "<b>%{y:.2s}<b>"
-
-
-
-			# else:
-
-
-
-			hovertemp = "<br><br>".join(
+				hovertemp = "<br><br>".join(
 
 					[
 
@@ -2019,157 +1733,15 @@ with ts_col2:
 					"<b>%{x}</b>", 
 
 
-					f"<b>Total Rent: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
+					f"<b>{metric_sel}: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
 
 					]
 
 
-			)
+					)
 
 
-			# texttemp = "<b>$%{y:.2s}</b>"
-
-
-
-			fig.update_traces(
-
-				hovertemplate = hovertemp
-
-				# texttemplate = texttemp, 
-
-				# textposition = 'top center'
-
-			)
-
-
-			fig.update_traces(mode='markers+lines')
-
-
-			fig.update_xaxes(tickangle = -45)
-
-
-			# if st.session_state.time_ax == 'Quarter':
-
-
-			# 	fig.update_xaxes(
-
-      #            tickmode = 'array',
-
-      #            tickvals = rental_grp_df[rental_time_val].values,
-
-      #            ticktext= [
-
-      #            '' if i % 6 != 0 else rental_grp_df[rental_time_val].values[i] for i in range(len(rental_grp_df[rental_time_val].values))
-
-      #            ]
-
-
-      #           )
-
-
-
-
-		else:
-
-
-
-			fig = exp.line(
-
-
-				rental_grp_df, 
-
-
-				x = f'{rental_time_val}',
-
-
-				y = f'Total Rent',
-
-
-
-				text = f'Total Rent'
-
-
-
-				)
-
-
-			fig.update_xaxes(title = f'')
-
-
-			# if 'unit' not in metric_sel.lower():
-
-
-			fig.update_yaxes(
-
-				title = f'Total Rent' + " (in Dollars)"
-
-			)
-
-
-			# else:
-
-
-			# 	fig.update_yaxes(
-
-			# 		title = f'Total Rent'
-
-			# 	)
-
-
-
-
-			# hovertemp = ""
-
-
-			# texttemp = ""
-
-
-
-			# if 'unit' in metric_sel.lower():
-
-
-
-			# 	hovertemp = "<br><br>".join(
-
-			# 	[
-
-
-			# 	"<b>%{x}</b>", 
-
-
-			# 	f"<b>Total Rent: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
-
-			# 	]
-
-
-			# 	)
-
-
-			# 	texttemp = "<b>%{y:.2s}<b>"
-
-
-
-			# else:
-
-
-
-			hovertemp = "<br><br>".join(
-
-					[
-
-
-					"<b>%{x}</b>", 
-
-
-					f"<b>Total Rent: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
-
-					]
-
-
-			)
-
-
-			texttemp = "<b>$%{y:.2s}</b>"
+				texttemp = "<b>$%{y:.2s}</b>"
 
 
 
@@ -2184,15 +1756,11 @@ with ts_col2:
 			)
 
 
-			# fig.update_traces(mode='markers+lines')
-
-
-
-		fig.update_layout(
+			fig.update_layout(
 
 				title = dict(
 
-					text = f"Total Rent by {st.session_state.time_ax}<br><br>", 
+					text = f"{metric_sel} by {st.session_state.time_ax}<br><br>", 
 
 					x = 0.5, 
 
@@ -2202,35 +1770,504 @@ with ts_col2:
 
 				)
 
-		)
+			)
+
+
+			fig.update_layout(height = 400)
 
 
 
-		fig.update_layout(height = 400)
+			# if st.session_state.time_ax == 'Quarter':
+
+			# 	fig.update_xaxes(tickangle = -45)
 
 
 
-		# Display Plotly Chart 
+			# Display Plotly Chart 
 
-
-		st.plotly_chart(fig, use_container_width = True)
-
-
+			st.plotly_chart(fig, use_container_width = True)
 
 
 
-# rental_df = sales_df[sales_df.OpenDateYear < 2010].groupby(['OpenDateYear'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
 
 
-# rental_month_df = sales_df[sales_df.OpenDateYear == 2005].groupby(['OpenDateMonth'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
-
-# rental_quarter_df = sales_df[sales_df.OpenDateYear == 2005].groupby(['OpenDateQuarter'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
+	# st.write(graph_df[metrics_dict[metric_sel]].sum())    # Total Number
 
 
-# st.dataframe(rental_quarter_df)
+
+	# st.write("\n\n")
 
 
-# Store Rental Calculation Ends Here
+	# st.table(
+
+	# 	sales_df.groupby(
+
+	# 		['Territory']
+
+	# 		, 
+
+	# 		as_index = False, 
+
+	# 		dropna = False
+
+	# 		).agg(
+
+	# 	{
+
+	# 	"TotalSales": pd.Series.sum
+
+	# 	}
+
+	# 	).sort_values(
+
+	# 	by = ['TotalSales'], 
+
+	# 	ascending = [False]
+
+
+
+	# 	).iloc[0, ::1]
+
+	# )
+
+
+
+	# # st.write(
+
+
+	# # 	sales_df[
+
+
+	# # 	(sales_df.Territory == 'PA') & 
+
+
+	# # 	(sales_df.DM.isin(['Carlos Grilo', 'Chris Gray']))
+
+
+	# # 	]['TotalSales'].sum()
+
+
+
+	# # )
+
+
+
+	# # Question 5 
+
+
+	# st.write("Total Sales: ")
+
+	# st.write(graph_df[metrics_dict[metric_sel]].sum())
+
+
+	# st.write("Best Performing Territory: ")
+
+
+	# st.write(sales_df.groupby(
+
+	# 	['Territory'], 
+
+	# 	as_index = False, 
+
+	# 	dropna = False
+
+	# 	).agg(
+
+	# 	{"TotalSales": pd.Series.sum}
+
+	# 	).sort_values(
+
+	# 	by = 'TotalSales', 
+
+	# 	ascending = False
+
+	# ).head())
+
+
+
+	with ts_col2:
+
+
+		with st.container(height = 430, border=True):
+
+
+			# Store Rental Calculation
+
+
+			# st.write(sales_df.iloc[::1, 22:26:1])
+
+
+			# st.write(sales_df.sample(4))
+
+
+			# st.write("Rental Calc")
+
+
+
+			rental_df = sales_df[
+
+
+				# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
+
+
+				(sales_df.DM.isin(st.session_state.dms_sel)) &
+
+
+				(sales_df.Territory.isin(st.session_state.terr_sel)) &
+
+
+				# (sales_df.Category.isin(st.session_state.cat_sel)) &
+
+
+				(pd.to_datetime(sales_df.OpenDateYearMonth) >= st.session_state.rental_months_sel[0]) & 
+
+
+				(pd.to_datetime(sales_df.OpenDateYearMonth) <= st.session_state.rental_months_sel[1])
+
+
+			]
+
+
+
+			rental_grp_df = rental_df.groupby(
+
+				[f'{rental_time_val}'], 
+
+				as_index = False, 
+
+				dropna = False
+
+				).agg(
+
+				{
+
+				f"Total Rent": pd.Series.sum
+
+				}
+
+				)
+
+
+
+
+			rental_grp_df = rental_grp_df.sort_values(
+
+				by = f'{rental_time_val}', 
+
+				ascending = True
+
+			)
+
+
+
+
+			# Time Series Plotly Express Chart
+
+
+			if st.session_state.time_ax == 'Quarter' or st.session_state.time_ax == 'Month':
+
+
+
+				fig = exp.line(
+
+
+					rental_grp_df, 
+
+
+					x = f'{rental_time_val}',
+
+
+					y = f'Total Rent',
+
+
+
+					# text = f'Total Rent'
+
+
+
+					)
+
+
+				fig.update_xaxes(title = f'')
+
+
+				# if 'unit' not in metric_sel.lower():
+
+
+				fig.update_yaxes(
+
+					title = f'Total Rent' + " (in Dollars)"
+
+				)
+
+
+				# else:
+
+
+				# 	fig.update_yaxes(
+
+				# 		title = f'Total Rent'
+
+				# 	)
+
+
+
+
+				# hovertemp = ""
+
+
+				# texttemp = ""
+
+
+
+				# if 'unit' in metric_sel.lower():
+
+
+
+				# 	hovertemp = "<br><br>".join(
+
+				# 	[
+
+
+				# 	"<b>%{x}</b>", 
+
+
+				# 	f"<b>Total Rent: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
+
+				# 	]
+
+
+				# 	)
+
+
+				# 	texttemp = "<b>%{y:.2s}<b>"
+
+
+
+				# else:
+
+
+
+				hovertemp = "<br><br>".join(
+
+						[
+
+
+						"<b>%{x}</b>", 
+
+
+						f"<b>Total Rent: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
+
+						]
+
+
+				)
+
+
+				# texttemp = "<b>$%{y:.2s}</b>"
+
+
+
+				fig.update_traces(
+
+					hovertemplate = hovertemp
+
+					# texttemplate = texttemp, 
+
+					# textposition = 'top center'
+
+				)
+
+
+				fig.update_traces(mode='markers+lines')
+
+
+				fig.update_xaxes(tickangle = -45)
+
+
+				# if st.session_state.time_ax == 'Quarter':
+
+
+				# 	fig.update_xaxes(
+
+	      #            tickmode = 'array',
+
+	      #            tickvals = rental_grp_df[rental_time_val].values,
+
+	      #            ticktext= [
+
+	      #            '' if i % 6 != 0 else rental_grp_df[rental_time_val].values[i] for i in range(len(rental_grp_df[rental_time_val].values))
+
+	      #            ]
+
+
+	      #           )
+
+
+
+
+			else:
+
+
+
+				fig = exp.line(
+
+
+					rental_grp_df, 
+
+
+					x = f'{rental_time_val}',
+
+
+					y = f'Total Rent',
+
+
+
+					text = f'Total Rent'
+
+
+
+					)
+
+
+				fig.update_xaxes(title = f'')
+
+
+				# if 'unit' not in metric_sel.lower():
+
+
+				fig.update_yaxes(
+
+					title = f'Total Rent' + " (in Dollars)"
+
+				)
+
+
+				# else:
+
+
+				# 	fig.update_yaxes(
+
+				# 		title = f'Total Rent'
+
+				# 	)
+
+
+
+
+				# hovertemp = ""
+
+
+				# texttemp = ""
+
+
+
+				# if 'unit' in metric_sel.lower():
+
+
+
+				# 	hovertemp = "<br><br>".join(
+
+				# 	[
+
+
+				# 	"<b>%{x}</b>", 
+
+
+				# 	f"<b>Total Rent: </b>" + "<b>%{y:.2s} units</b><extra></extra>"
+
+				# 	]
+
+
+				# 	)
+
+
+				# 	texttemp = "<b>%{y:.2s}<b>"
+
+
+
+				# else:
+
+
+
+				hovertemp = "<br><br>".join(
+
+						[
+
+
+						"<b>%{x}</b>", 
+
+
+						f"<b>Total Rent: </b>" + "<b>$%{y:.2s}</b><extra></extra>"
+
+						]
+
+
+				)
+
+
+				texttemp = "<b>$%{y:.2s}</b>"
+
+
+
+				fig.update_traces(
+
+					hovertemplate = hovertemp, 
+
+					texttemplate = texttemp, 
+
+					textposition = 'top center'
+
+				)
+
+
+				# fig.update_traces(mode='markers+lines')
+
+
+
+			fig.update_layout(
+
+					title = dict(
+
+						text = f"Total Rent by {st.session_state.time_ax}<br><br>", 
+
+						x = 0.5, 
+
+						xanchor = 'center', 
+
+						yanchor =  'top'
+
+					)
+
+			)
+
+
+
+			fig.update_layout(height = 400)
+
+
+
+			# Display Plotly Chart 
+
+
+			st.plotly_chart(fig, use_container_width = True)
+
+
+
+
+
+	# rental_df = sales_df[sales_df.OpenDateYear < 2010].groupby(['OpenDateYear'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
+
+
+	# rental_month_df = sales_df[sales_df.OpenDateYear == 2005].groupby(['OpenDateMonth'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
+
+	# rental_quarter_df = sales_df[sales_df.OpenDateYear == 2005].groupby(['OpenDateQuarter'], as_index = False, dropna = False).agg({"Total Rent": pd.Series.sum}).sort_values(by = 'Total Rent', ascending = True)
+
+
+	# st.dataframe(rental_quarter_df)
+
+
+	# Store Rental Calculation Ends Here
 
 
 
@@ -2494,201 +2531,18 @@ with ts_col2:
 # st.plotly_chart(fig, use_container_width = True)
 
 
-st.write("\n\n")   # New Line Characters
+# st.write("\n\n")   # New Line Characters
 
 
-# Total Sales By Territory Donut Chart
 
+with tab2:
 
 
-donut_df = sales_df[
+	# Total Sales By Territory Donut Chart
 
 
-(sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
-
-(sales_df.DM.isin(st.session_state.dms_sel)) &
-
-
-(sales_df.Territory.isin(st.session_state.terr_sel)) &
-
-
-(sales_df.Category.isin(st.session_state.cat_sel)) &
-
-
-(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
-
-
-(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
-
-
-]
-
-
-
-donut_df = donut_df.groupby(
-
-	['Territory'], 
-
-	as_index = False, 
-
-	dropna = False).agg(
-
-	{f"{metrics_dict[metric_sel]}": pd.Series.sum}
-
-	).sort_values(
-
-	by = [f'{metrics_dict[metric_sel]}'], 
-
-	ascending = [False]
-
-	)
-
-
-labels = donut_df['Territory'].values 
-
-
-values = donut_df[f'{metrics_dict[metric_sel]}'].values 
-
-
-
-fig = go.Figure()
-
-
-
-if 'unit' not in metric_sel.lower():
-
-
-
-	fig = go.Figure(
-
-		data=[
-
-		go.Pie(
-
-			labels=labels, 
-
-			values=values, 
-
-			texttemplate="<b>%{label}<br>"
-	                 "%{percent:.1%}</b>",
-
-
-
-	    showlegend = False,
-
-	    # Add bolded labels for each piece of data
-
-	    hovertemplate = "<br><br>".join(
-
-	    	[
-
-		    	"<b>%{label}</b>", 
-
-		    	f"<b>{metric_sel}: </b>" + "<b>$%{value:.2s}</b>", 
-
-
-		    	"<b>%{percent:.2f}</b><extra></extra>"
-
-		    	""
-
-	    	]
-
-	    )
-
-
-			)
-
-		]
-
-	)
-
-
-
-else:
-
-
-	fig = go.Figure(
-
-		data=[
-
-		go.Pie(
-
-			labels=labels, 
-
-			values=values, 
-
-			texttemplate="<b>%{label}<br>"
-	                 "%{percent:.1%}</b>",
-
-
-
-	    showlegend = False,
-
-	    # Add bolded labels for each piece of data
-
-	    hovertemplate = "<br><br>".join(
-
-	    	[
-
-		    	"<b>%{label}</b>", 
-
-		    	f"<b>{metric_sel}: </b>" + "<b>%{value:.2s} units</b>", 
-
-
-		    	"<b>%{percent:.1%}</b><extra></extra>"
-
-		    	""
-
-	    	]
-
-	    )
-
-
-			)
-
-		]
-
-	)
-
-
-
-
-
-fig.update_traces(hole = .5)
-
-
-fig.update_layout(
-
-	title = dict(
-
-		text = f"{metric_sel} by Territory<br>", 
-
-		x = 0.5, 
-
-		xanchor = 'center', 
-
-		yanchor =  'top'
-
-	)
-
-)
-
-
-
-st.plotly_chart(fig, use_container_width = True)
-
-
-
-
-
-# Gross Margin Scenario Table
-
-
-st.write("\n\n")
-
-
-margin_df = sales_df[
+	donut_df = sales_df[
 
 
 	(sales_df.ItemID.isin(st.session_state.item_filt)) & 
@@ -2709,241 +2563,452 @@ margin_df = sales_df[
 	(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
 
 
-]
+	]
 
 
 
-scen_1 = margin_df[margin_df.ScenarioID == 1]
+	donut_df = donut_df.groupby(
+
+		['Territory'], 
+
+		as_index = False, 
+
+		dropna = False).agg(
+
+		{f"{metrics_dict[metric_sel]}": pd.Series.sum}
+
+		).sort_values(
+
+		by = [f'{metrics_dict[metric_sel]}'], 
+
+		ascending = [False]
+
+		)
 
 
-scen_2 = margin_df[margin_df.ScenarioID == 2]
+	labels = donut_df['Territory'].values 
 
 
-scen_1_grp = scen_1.groupby(
-
-	['MonthID'], 
-
-	as_index = False, 
-
-	dropna = False
-
-	).agg(
-
-	{"Sum_GrossMarginAmount": pd.Series.sum}
-
-	).sort_values(
-
-	by = 'MonthID', 
-
-	ascending = True
-
-)
-
-
-scen_1_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
+	values = donut_df[f'{metrics_dict[metric_sel]}'].values 
 
 
 
-scen_2_grp = scen_2.groupby(
-
-	['MonthID'], 
-
-	as_index = False, 
-
-	dropna = False
-
-	).agg(
-
-	{"Sum_GrossMarginAmount": pd.Series.sum}
-
-	).sort_values(
-
-	by = 'MonthID', 
-
-	ascending = True
-
-)
+	fig = go.Figure()
 
 
 
-scen_2_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
+	if 'unit' not in metric_sel.lower():
 
 
 
-scenario_tab = pd.merge(
+		fig = go.Figure(
 
-	scen_1_grp, 
+			data=[
 
-	scen_2_grp, 
+			go.Pie(
 
-	how = 'inner', 
+				labels=labels, 
 
-	on = 'Month'
+				values=values, 
 
+				texttemplate="<b>%{label}<br>"
+		                 "%{percent:.1%}</b>",
+
+
+
+		    showlegend = False,
+
+		    # Add bolded labels for each piece of data
+
+		    hovertemplate = "<br><br>".join(
+
+		    	[
+
+			    	"<b>%{label}</b>", 
+
+			    	f"<b>{metric_sel}: </b>" + "<b>$%{value:.2s}</b>", 
+
+
+			    	"<b>%{percent:.2f}</b><extra></extra>"
+
+			    	""
+
+		    	]
+
+		    )
+
+
+				)
+
+			]
+
+		)
+
+
+
+	else:
+
+
+		fig = go.Figure(
+
+			data=[
+
+			go.Pie(
+
+				labels=labels, 
+
+				values=values, 
+
+				texttemplate="<b>%{label}<br>"
+		                 "%{percent:.1%}</b>",
+
+
+
+		    showlegend = False,
+
+		    # Add bolded labels for each piece of data
+
+		    hovertemplate = "<br><br>".join(
+
+		    	[
+
+			    	"<b>%{label}</b>", 
+
+			    	f"<b>{metric_sel}: </b>" + "<b>%{value:.2s} units</b>", 
+
+
+			    	"<b>%{percent:.1%}</b><extra></extra>"
+
+			    	""
+
+		    	]
+
+		    )
+
+
+				)
+
+			]
+
+		)
+
+
+
+	fig.update_traces(hole = .5)
+
+
+
+	fig.update_layout(
+
+		title = dict(
+
+			text = f"{metric_sel} by Territory<br>", 
+
+			x = 0.5, 
+
+			xanchor = 'center', 
+
+			yanchor =  'top',
+
+			font = dict(
+
+				size = 28
+
+			)
+
+		)
 
 	)
 
 
 
-scenario_tab['Total Gross Margin Amount'] = scenario_tab.apply(
+	st.plotly_chart(fig, use_container_width = True)
 
-	lambda x: x[1] + x[2], 
 
-	axis = 1
 
-	)
 
 
+try:
 
-scenario_tab['Gross Percentage'] = scenario_tab.apply(
+	with tab3:
 
-	lambda x: round((x[1] / x[3]) * 100, 2), 
 
-	axis = 1
+		# Gross Margin Scenario Table
 
-	)
 
+		st.write("\n\n")
 
 
+		margin_df = sales_df[
 
-# Display Scenario Table
 
+			(sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
-# st.dataframe(data = scenario_tab, use_container_width = True, hide_index = True)
 
+			(sales_df.DM.isin(st.session_state.dms_sel)) &
 
 
-# Totals Scenario Table
+			(sales_df.Territory.isin(st.session_state.terr_sel)) &
 
 
-scen_vals =[
+			(sales_df.Category.isin(st.session_state.cat_sel)) &
 
-	
-	"Total",
 
-	scenario_tab.apply(lambda x: x[1], axis = 1).sum(), 
+			(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
 
-	scenario_tab.apply(lambda x: x[2], axis = 1).sum(), 
 
-	scenario_tab.apply(lambda x: x[3], axis = 1).sum(), 
+			(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
 
-	scenario_tab.apply(lambda x: x[4], axis = 1).mean()
 
-]
+		]
 
 
-scen_names = scenario_tab.columns.values.tolist()
 
+		scen_1 = margin_df[margin_df.ScenarioID == 1]
 
-scen_dict = {k: v for k, v in zip(scen_names, scen_vals)}
 
+		scen_2 = margin_df[margin_df.ScenarioID == 2]
 
-scenario_totals = pd.DataFrame([scen_dict])
 
+		scen_1_grp = scen_1.groupby(
 
+			['MonthID'], 
 
-scenario_tab['Gross Percentage'] = scenario_tab.apply(
+			as_index = False, 
 
-	lambda x: (str(round((x[1] / x[3]) * 100, 2)) + "%").strip(), 
+			dropna = False
 
-	axis = 1
+			).agg(
 
-	)
+			{"Sum_GrossMarginAmount": pd.Series.sum}
 
+			).sort_values(
 
+			by = 'MonthID', 
 
-scenario_tab['Total Gross Margin Amount'] = scenario_tab['Total Gross Margin Amount'].apply(
+			ascending = True
 
-	lambda x: f"${int(x):,d}"
+		)
 
 
-	)
+		scen_1_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
 
 
-scenario_tab['Sum of Gross Margin Amount for Scenario 2'] = scenario_tab['Sum of Gross Margin Amount for Scenario 2'].apply(
 
+		scen_2_grp = scen_2.groupby(
 
-	lambda x: f"${int(x):,d}"
+			['MonthID'], 
 
+			as_index = False, 
 
-	)
+			dropna = False
 
+			).agg(
 
+			{"Sum_GrossMarginAmount": pd.Series.sum}
 
-scenario_tab['Sum of Gross Margin Amount for Scenario 1'] = scenario_tab['Sum of Gross Margin Amount for Scenario 1'].apply(
+			).sort_values(
 
+			by = 'MonthID', 
 
-	lambda x: f"${int(x):,d}"
+			ascending = True
 
+		)
 
-	)
 
 
-scenario_tab['Month'] = scenario_tab['Month'].apply(
+		scen_2_grp.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
 
-	lambda x: dt.datetime.strftime(x, "%B %Y")
 
 
-	)
+		scenario_tab = pd.merge(
 
+			scen_1_grp, 
 
+			scen_2_grp, 
 
+			how = 'inner', 
 
+			on = 'Month'
 
-scenario_totals['Gross Percentage'] = scenario_totals['Gross Percentage'].apply(
 
-	lambda x: (str(round(x, 2)) + "%").strip()
+			)
 
-	)
 
 
+		scenario_tab['Total Gross Margin Amount'] = scenario_tab.apply(
 
-scenario_totals['Total Gross Margin Amount'] = scenario_totals['Total Gross Margin Amount'].apply(
+			lambda x: x[1] + x[2], 
 
-	lambda x: f"${int(x):,d}"
+			axis = 1
 
+			)
 
-	)
 
 
-scenario_totals['Sum of Gross Margin Amount for Scenario 2'] = scenario_totals['Sum of Gross Margin Amount for Scenario 2'].apply(
+		scenario_tab['Gross Percentage'] = scenario_tab.apply(
 
+			lambda x: round((x[1] / x[3]) * 100, 2), 
 
-	lambda x: f"${int(x):,d}"
+			axis = 1
 
+			)
 
-	)
 
 
 
-scenario_totals['Sum of Gross Margin Amount for Scenario 1'] = scenario_totals['Sum of Gross Margin Amount for Scenario 1'].apply(
+		# Display Scenario Table
 
 
-	lambda x: f"${int(x):,d}"
+		# st.dataframe(data = scenario_tab, use_container_width = True, hide_index = True)
 
 
-	)
 
+		# Totals Scenario Table
 
 
-final_scenario_table = pd.concat(
+		scen_vals =[
 
-	[scenario_tab, scenario_totals], 
+			
+			"Total",
 
-	axis = 0, 
+			scenario_tab.apply(lambda x: x[1], axis = 1).sum(), 
 
-	ignore_index = True
+			scenario_tab.apply(lambda x: x[2], axis = 1).sum(), 
 
-	)
+			scenario_tab.apply(lambda x: x[3], axis = 1).sum(), 
 
+			scenario_tab.apply(lambda x: x[4], axis = 1).mean()
 
-# Display Final Scenario Table
+		]
 
 
-st.write("<h3><center>Final Scenario Table</center></h3><br>", unsafe_allow_html = True)
+		scen_names = scenario_tab.columns.values.tolist()
 
 
-st.dataframe(data = final_scenario_table, hide_index = True, use_container_width = True)
+		scen_dict = {k: v for k, v in zip(scen_names, scen_vals)}
+
+
+		scenario_totals = pd.DataFrame([scen_dict])
+
+
+
+		scenario_tab['Gross Percentage'] = scenario_tab.apply(
+
+			lambda x: (str(round((x[1] / x[3]) * 100, 2)) + "%").strip(), 
+
+			axis = 1
+
+			)
+
+
+
+		scenario_tab['Total Gross Margin Amount'] = scenario_tab['Total Gross Margin Amount'].apply(
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+		scenario_tab['Sum of Gross Margin Amount for Scenario 2'] = scenario_tab['Sum of Gross Margin Amount for Scenario 2'].apply(
+
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+
+		scenario_tab['Sum of Gross Margin Amount for Scenario 1'] = scenario_tab['Sum of Gross Margin Amount for Scenario 1'].apply(
+
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+		scenario_tab['Month'] = scenario_tab['Month'].apply(
+
+			lambda x: dt.datetime.strftime(x, "%B %Y")
+
+
+			)
+
+
+
+
+
+		scenario_totals['Gross Percentage'] = scenario_totals['Gross Percentage'].apply(
+
+			lambda x: (str(round(x, 2)) + "%").strip()
+
+			)
+
+
+
+		scenario_totals['Total Gross Margin Amount'] = scenario_totals['Total Gross Margin Amount'].apply(
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+		scenario_totals['Sum of Gross Margin Amount for Scenario 2'] = scenario_totals['Sum of Gross Margin Amount for Scenario 2'].apply(
+
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+
+		scenario_totals['Sum of Gross Margin Amount for Scenario 1'] = scenario_totals['Sum of Gross Margin Amount for Scenario 1'].apply(
+
+
+			lambda x: f"${int(x):,d}"
+
+
+			)
+
+
+
+		final_scenario_table = pd.concat(
+
+			[scenario_tab, scenario_totals], 
+
+			axis = 0, 
+
+			ignore_index = True
+
+			)
+
+
+		# Display Final Scenario Table
+
+
+		st.write("<div style='text-align: center;'><span style='font-weight: bold;font-size: 30px;'>Scenario Table</span></div><br>", unsafe_allow_html = True)
+
+
+		st.dataframe(data = final_scenario_table, hide_index = True, use_container_width = True)
+
+
+
+except:
+
+
+	st.write(
+
+			"<div style='text-align: center;'><span style='font-weight: bold;font-size: 18px;'>Not Enough Data To Display Table</span></div><br>", 
+
+			unsafe_allow_html = True
+
+		)
+
 
 
 
