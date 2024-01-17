@@ -3074,274 +3074,274 @@ st.write("\n\n")
 
 
 
-# Scenario Table Practice
+# # Scenario Table Practice
 
 
-scen_df = sales_df[
+# scen_df = sales_df[
 
 
-		# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
+# 		# (sales_df.ItemID.isin(st.session_state.item_filt)) & 
 
 
-		(sales_df.DM.isin(st.session_state.dms_sel)) &
+# 		(sales_df.DM.isin(st.session_state.dms_sel)) &
 
 
-		(sales_df.Territory.isin(st.session_state.terr_sel)) &
+# 		(sales_df.Territory.isin(st.session_state.terr_sel)) &
 
 
-		(sales_df.Category.isin(st.session_state.cat_sel)) &
+# 		(sales_df.Category.isin(st.session_state.cat_sel)) &
 
 
-		(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
+# 		(pd.to_datetime(sales_df.MonthID) >= st.session_state.months_sel[0]) & 
 
 
-		(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
+# 		(pd.to_datetime(sales_df.MonthID) <= st.session_state.months_sel[1])
 
 
-	]
+# 	]
 
 
-scen1 = scen_df[sales_df.ScenarioID == 1].groupby(
+# scen1 = scen_df[sales_df.ScenarioID == 1].groupby(
 
 
-	['MonthID'], 
+# 	['MonthID'], 
 
-	as_index = False, 
+# 	as_index = False, 
 
-	dropna = False
+# 	dropna = False
 
 
-	).agg(
+# 	).agg(
 
-	{"Sum_GrossMarginAmount": pd.Series.sum}
+# 	{"Sum_GrossMarginAmount": pd.Series.sum}
 
-	).sort_values(
+# 	).sort_values(
 
-	by = 'MonthID', 
+# 	by = 'MonthID', 
 
-	ascending = True
+# 	ascending = True
 
 
-)
+# )
 
 
-scen2 = scen_df[
+# scen2 = scen_df[
 
 
-sales_df.ScenarioID == 2
+# sales_df.ScenarioID == 2
 
 
-].groupby(
+# ].groupby(
 
-	['MonthID'], 
+# 	['MonthID'], 
 
 
-	as_index = False, 
+# 	as_index = False, 
 
 
-	dropna = False
+# 	dropna = False
 
 
-	).agg(
+# 	).agg(
 
 
-	{"Sum_GrossMarginAmount": pd.Series.sum}
+# 	{"Sum_GrossMarginAmount": pd.Series.sum}
 
 
-	).sort_values(
+# 	).sort_values(
 
 
-	by = ['MonthID'], 
+# 	by = ['MonthID'], 
 
 
-	ascending = [True]
+# 	ascending = [True]
 
-)
+# )
 
 
-scen1.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
+# scen1.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 1']
 
 
-scen2.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
+# scen2.columns = ['Month', 'Sum of Gross Margin Amount for Scenario 2']
 
 
 
-scen_merged = pd.merge(scen1, scen2, on = 'Month', how = 'inner')
+# scen_merged = pd.merge(scen1, scen2, on = 'Month', how = 'inner')
 
 
-scen_merged['Total Gross Margin Amount'] = scen_merged.apply(
+# scen_merged['Total Gross Margin Amount'] = scen_merged.apply(
 
-	lambda x: x[1] + x[2], 
+# 	lambda x: x[1] + x[2], 
 
 
-	axis = 1
+# 	axis = 1
 
 
-	)
+# 	)
 
 
 
-scen_merged['Gross Percentage'] = scen_merged.apply(lambda x: x[1] / x[3], axis = 1)
+# scen_merged['Gross Percentage'] = scen_merged.apply(lambda x: x[1] / x[3], axis = 1)
 
 
 
-scen_total = pd.DataFrame(
+# scen_total = pd.DataFrame(
 
 
-	[
+# 	[
 
-		{
+# 		{
 
-			"Month": 'Total', 
+# 			"Month": 'Total', 
 
 
-			"Sum of Gross Margin Amount for Scenario 1": scen_merged['Sum of Gross Margin Amount for Scenario 1'].sum(),
+# 			"Sum of Gross Margin Amount for Scenario 1": scen_merged['Sum of Gross Margin Amount for Scenario 1'].sum(),
 
 
-			"Sum of Gross Margin Amount for Scenario 2": scen_merged['Sum of Gross Margin Amount for Scenario 2'].sum(),
+# 			"Sum of Gross Margin Amount for Scenario 2": scen_merged['Sum of Gross Margin Amount for Scenario 2'].sum(),
 
 
-			"Total Gross Margin Amount": scen_merged['Total Gross Margin Amount'].sum(),
+# 			"Total Gross Margin Amount": scen_merged['Total Gross Margin Amount'].sum(),
 
 
-			"Gross Percentage": scen_merged['Gross Percentage'].mean()
+# 			"Gross Percentage": scen_merged['Gross Percentage'].mean()
 
-		}
+# 		}
 
 
-	]
+# 	]
 
 
 
-)
+# )
 
 
 
-scen_merged['Month'] = scen_merged['Month'].apply(
+# scen_merged['Month'] = scen_merged['Month'].apply(
 
-	lambda x: 
+# 	lambda x: 
 
-	dt.datetime.strftime(x, "%B - %Y")
+# 	dt.datetime.strftime(x, "%B - %Y")
 
-	)
+# 	)
 
 
-scen_merged['Sum of Gross Margin Amount for Scenario 1'] = scen_merged[
+# scen_merged['Sum of Gross Margin Amount for Scenario 1'] = scen_merged[
 
-'Sum of Gross Margin Amount for Scenario 1'
+# 'Sum of Gross Margin Amount for Scenario 1'
 
-].apply(
+# ].apply(
 
 
-	lambda x: f"${int(x):,d}"
+# 	lambda x: f"${int(x):,d}"
 
 
-	)
+# 	)
 
 
-scen_merged['Sum of Gross Margin Amount for Scenario 2'] = scen_merged[
+# scen_merged['Sum of Gross Margin Amount for Scenario 2'] = scen_merged[
 
-'Sum of Gross Margin Amount for Scenario 2'
+# 'Sum of Gross Margin Amount for Scenario 2'
 
-].apply(
+# ].apply(
 
 
-	lambda x: f"${int(x):,d}"
+# 	lambda x: f"${int(x):,d}"
 
 
-	)
+# 	)
 
 
 
 
-scen_merged['Total Gross Margin Amount'] = scen_merged[
+# scen_merged['Total Gross Margin Amount'] = scen_merged[
 
-'Total Gross Margin Amount'
+# 'Total Gross Margin Amount'
 
-].apply(
+# ].apply(
 
 
-	lambda x: f"${int(x):,d}"
+# 	lambda x: f"${int(x):,d}"
 
 
-	)
+# 	)
 
 
-scen_merged['Gross Percentage'] = scen_merged['Gross Percentage'].apply(
+# scen_merged['Gross Percentage'] = scen_merged['Gross Percentage'].apply(
 
-	lambda x: f"{x:.1%}"
+# 	lambda x: f"{x:.1%}"
 
-	)
+# 	)
 
 
 
 
-scen_total['Sum of Gross Margin Amount for Scenario 1'] = scen_total[
+# scen_total['Sum of Gross Margin Amount for Scenario 1'] = scen_total[
 
-'Sum of Gross Margin Amount for Scenario 1'
+# 'Sum of Gross Margin Amount for Scenario 1'
 
-].apply(
+# ].apply(
 	
 
-	lambda x: f"${int(x):,d}"
+# 	lambda x: f"${int(x):,d}"
 
 
-	)
+# 	)
 
 
-scen_total['Sum of Gross Margin Amount for Scenario 2'] = scen_total[
+# scen_total['Sum of Gross Margin Amount for Scenario 2'] = scen_total[
 
-'Sum of Gross Margin Amount for Scenario 2'
+# 'Sum of Gross Margin Amount for Scenario 2'
 
-].apply(
-
-
-	lambda x: f"${int(x):,d}"
+# ].apply(
 
 
-	)
+# 	lambda x: f"${int(x):,d}"
 
 
-
-
-scen_total['Total Gross Margin Amount'] = scen_total[
-
-'Total Gross Margin Amount'
-
-].apply(
-
-
-	lambda x: f"${int(x):,d}"
-
-
-	)
+# 	)
 
 
 
 
-scen_total['Gross Percentage'] = scen_total['Gross Percentage'].apply(
+# scen_total['Total Gross Margin Amount'] = scen_total[
 
-	lambda x: f"{x:.1%}"
+# 'Total Gross Margin Amount'
 
-	)
-
-
-
-scen_final = pd.concat(
-
-	[scen_merged, scen_total], 
-
-	axis = 0, 
-
-	ignore_index = True
-
-)
+# ].apply(
 
 
-# Displaying scen_final
+# 	lambda x: f"${int(x):,d}"
 
 
-st.dataframe(scen_final, use_container_width = True, hide_index = True)
+# 	)
+
+
+
+
+# scen_total['Gross Percentage'] = scen_total['Gross Percentage'].apply(
+
+# 	lambda x: f"{x:.1%}"
+
+# 	)
+
+
+
+# scen_final = pd.concat(
+
+# 	[scen_merged, scen_total], 
+
+# 	axis = 0, 
+
+# 	ignore_index = True
+
+# )
+
+
+# # Displaying scen_final
+
+
+# st.dataframe(scen_final, use_container_width = True, hide_index = True)
 
 
 
